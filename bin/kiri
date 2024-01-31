@@ -2344,6 +2344,7 @@ launch_webserver()
 get_kicad_pro()
 {
     #get_kicad_pro_my "${1}"
+    echo "My Script file 'get_kicad_pro' override"
     get_kicad_pro_orig "${1}"
 }
 
