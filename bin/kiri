@@ -901,6 +901,8 @@ command_line_parse()
 		esac
 	done
 
+    echo "Positional Parameter '${kicad_pro_path}'"
+
 	KICAD_PRO_ABSOLUTE_PATH=$(realpath "${kicad_pro_path/#\~/$HOME}" 2> /dev/null)
 	if [[ ! -f ${KICAD_PRO_ABSOLUTE_PATH} ]]; then
 		if [[ -n ${kicad_pro_path} ]]; then
@@ -2343,22 +2345,27 @@ launch_webserver()
 
 get_kicad_pro()
 {
+    #echo "Project path ${1}"
+    #echo "${KICAD_PRO_ABSOLUTE_PATH}"
     #get_kicad_pro_my "${1}"
-    echo "My Script file 'get_kicad_pro' override"
+    #echo "My Script file 'get_kicad_pro' override"
     get_kicad_pro_orig "${1}"
 }
 
 get_kicad_pro_my()
 {
-	basename "${KICAD_PRO_ABSOLUTE_PATH}"
+    local kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -name "${KICAD_PRO_ABSOLUTE_PATH}")"
+	basename "${kicad_pro}"
 }
 
 get_kicad_pro_orig()
 {
 	local kicad_proj_path="${1}"
+    #echo "Project path ${kicad_proj_path}"
+    #echo "${KICAD_PRO_ABSOLUTE_PATH}"
 
-	#local kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -name "*.kicad_pro")"
-    local kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -regex ".+[^\.]+\.kicad_pro")"
+	local kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -name "*.kicad_pro")"
+    #local kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -regex ".+[^\.]+\.kicad_pro")"
 	if [[ -z "${kicad_pro}" ]]; then
 		kicad_pro="$(find "${kicad_proj_path}" -maxdepth 1 -name "*.pro")"
 	fi
@@ -2484,7 +2491,7 @@ main()
 
 	check_required_tools
 
-	shift
+	#shift
 	command_line_parse "${@}"
 
 	show_main_global_variables
